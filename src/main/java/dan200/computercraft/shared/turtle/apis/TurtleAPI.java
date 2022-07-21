@@ -14,7 +14,9 @@ import dan200.computercraft.core.apis.IAPIEnvironment;
 import dan200.computercraft.core.tracking.TrackingField;
 import dan200.computercraft.shared.peripheral.generic.data.ItemData;
 import dan200.computercraft.shared.peripheral.generic.methods.InventoryMethods;
+import dan200.computercraft.shared.turtle.blocks.TileTurtle;
 import dan200.computercraft.shared.turtle.core.*;
+import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.HashMap;
@@ -725,6 +727,26 @@ public class TurtleAPI implements ILuaAPI
     public final MethodResult equipRight()
     {
         return trackCommand( new TurtleEquipCommand( TurtleSide.RIGHT ) );
+    }
+
+    @LuaFunction
+    public final Object getDurabilityLeft()
+    {
+        int slot = TileTurtle.NORMAL_INVENTORY_SIZE + TurtleSide.LEFT.ordinal();
+        Container inventory = turtle.getInventory();
+        ItemStack item = inventory.getItem(slot);
+        if (item.isEmpty()) return null;
+        return item.getMaxDamage() - item.getDamageValue();
+    }
+
+    @LuaFunction
+    public final Object getDurabilityRight()
+    {
+        int slot = TileTurtle.NORMAL_INVENTORY_SIZE + TurtleSide.RIGHT.ordinal();
+        Container inventory = turtle.getInventory();
+        ItemStack item = inventory.getItem(slot);
+        if (item.isEmpty()) return null;
+        return item.getMaxDamage() - item.getDamageValue();
     }
 
     /**

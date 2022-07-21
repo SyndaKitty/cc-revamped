@@ -7,6 +7,7 @@ package dan200.computercraft.shared.turtle.core;
 
 import dan200.computercraft.api.turtle.*;
 import dan200.computercraft.shared.TurtleUpgrades;
+import dan200.computercraft.shared.turtle.blocks.TileTurtle;
 import dan200.computercraft.shared.util.InventoryUtil;
 import dan200.computercraft.shared.util.ItemStorage;
 import dan200.computercraft.shared.util.WorldUtil;
@@ -42,30 +43,26 @@ public class TurtleEquipCommand implements ITurtleCommand
         }
         else
         {
-            newUpgradeStack = null;
+            newUpgradeStack = ItemStack.EMPTY;
             newUpgrade = null;
         }
 
-        // Determine the upgrade to replace
-        ItemStack oldUpgradeStack;
+        int oldUpgradeSlot = TileTurtle.NORMAL_INVENTORY_SIZE + side.ordinal();
+        ItemStack oldUpgradeStack = inventory.getItem(oldUpgradeSlot).copy();
         ITurtleUpgrade oldUpgrade = turtle.getUpgrade( side );
-        if( oldUpgrade != null )
-        {
-            ItemStack craftingItem = oldUpgrade.getCraftingItem();
-            oldUpgradeStack = !craftingItem.isEmpty() ? craftingItem.copy() : null;
-        }
-        else
-        {
-            oldUpgradeStack = null;
-        }
 
         // Do the swapping:
+        if( oldUpgradeStack != null )
+        {
+            // Remove installed upgrade
+            InventoryUtil.takeItems(1, ItemStorage.wrap(inventory), oldUpgradeSlot, 1, oldUpgradeSlot);
+        }
         if( newUpgradeStack != null )
         {
             // Consume new upgrades item
             InventoryUtil.takeItems( 1, ItemStorage.wrap( inventory ), turtle.getSelectedSlot(), 1, turtle.getSelectedSlot() );
         }
-        if( oldUpgradeStack != null )
+        if ( oldUpgradeStack != null )
         {
             // Store old upgrades item
             ItemStack remainder = InventoryUtil.storeItems( oldUpgradeStack, ItemStorage.wrap( inventory ), turtle.getSelectedSlot() );
@@ -76,6 +73,11 @@ public class TurtleEquipCommand implements ITurtleCommand
                 WorldUtil.dropItemStack( remainder, turtle.getLevel(), position, turtle.getDirection() );
             }
         }
+        if ( newUpgradeStack != null )
+        {
+            InventoryUtil.storeItems(newUpgradeStack, ItemStorage.wrap(inventory), oldUpgradeSlot);
+        }
+
         turtle.setUpgrade( side, newUpgrade );
 
         // Animate

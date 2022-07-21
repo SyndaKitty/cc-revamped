@@ -83,7 +83,7 @@ public final class TurtleUpgrades
             if( !wrapper.enabled ) continue;
 
             ItemStack craftingStack = wrapper.upgrade.getCraftingItem();
-            if( !craftingStack.isEmpty() && craftingStack.getItem() == stack.getItem() && wrapper.upgrade.isItemSuitable( stack ) )
+            if( !craftingStack.isEmpty() && craftingStack.is(stack.getItem()) && wrapper.upgrade.isItemSuitable( stack ) )
             {
                 return wrapper.upgrade;
             }

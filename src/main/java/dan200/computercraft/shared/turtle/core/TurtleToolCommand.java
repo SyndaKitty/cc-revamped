@@ -1,3 +1,4 @@
+
 /*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2022. Do not distribute without permission.
@@ -6,6 +7,12 @@
 package dan200.computercraft.shared.turtle.core;
 
 import dan200.computercraft.api.turtle.*;
+import dan200.computercraft.shared.turtle.blocks.TileTurtle;
+import dan200.computercraft.shared.util.InventoryUtil;
+import dan200.computercraft.shared.util.ItemStorage;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,6 +35,7 @@ public class TurtleToolCommand implements ITurtleCommand
     @Override
     public TurtleCommandResult execute( @Nonnull ITurtleAccess turtle )
     {
+
         TurtleCommandResult firstFailure = null;
         for( TurtleSide side : TurtleSide.values() )
         {
@@ -39,6 +47,15 @@ public class TurtleToolCommand implements ITurtleCommand
             TurtleCommandResult result = upgrade.useTool( turtle, side, verb, direction.toWorldDir( turtle ) );
             if( result.isSuccess() )
             {
+                int upgradeSlot = TileTurtle.NORMAL_INVENTORY_SIZE + side.ordinal();
+                ItemStack upgradeItemStack = turtle.getInventory().getItem(upgradeSlot);
+                if (upgradeItemStack.hurt(1, RandomSource.create(), null) )
+                {
+                    Container inventory = turtle.getInventory();
+                    InventoryUtil.takeItems( 1, ItemStorage.wrap( inventory ), upgradeSlot, 1, upgradeSlot );
+                    turtle.setUpgrade( side, null );
+                }
+
                 switch( side )
                 {
                     case LEFT:

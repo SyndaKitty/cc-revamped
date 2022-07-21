@@ -48,7 +48,8 @@ import java.util.Collections;
 
 public class TileTurtle extends TileComputerBase implements ITurtleTile, DefaultInventory
 {
-    public static final int INVENTORY_SIZE = 16;
+    public static final int TOTAL_INVENTORY_SIZE = 18;
+    public static final int NORMAL_INVENTORY_SIZE = 16;
     public static final int INVENTORY_WIDTH = 4;
     public static final int INVENTORY_HEIGHT = 4;
 
@@ -59,8 +60,8 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Default
         MOVED
     }
 
-    private final NonNullList<ItemStack> inventory = NonNullList.withSize( INVENTORY_SIZE, ItemStack.EMPTY );
-    private final NonNullList<ItemStack> previousInventory = NonNullList.withSize( INVENTORY_SIZE, ItemStack.EMPTY );
+    private final NonNullList<ItemStack> inventory = NonNullList.withSize(TOTAL_INVENTORY_SIZE, ItemStack.EMPTY );
+    private final NonNullList<ItemStack> previousInventory = NonNullList.withSize(TOTAL_INVENTORY_SIZE, ItemStack.EMPTY );
     private boolean inventoryChanged = false;
     private TurtleBrain brain = new TurtleBrain( this );
     private MoveState moveState = MoveState.NOT_MOVED;
@@ -282,7 +283,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Default
     {
         // Write inventory
         ListTag nbttaglist = new ListTag();
-        for( int i = 0; i < INVENTORY_SIZE; i++ )
+        for(int i = 0; i < TOTAL_INVENTORY_SIZE; i++ )
         {
             if( !inventory.get( i ).isEmpty() )
             {
@@ -380,7 +381,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Default
     @Override
     public int getContainerSize()
     {
-        return INVENTORY_SIZE;
+        return TOTAL_INVENTORY_SIZE;
     }
 
     @Override
@@ -397,7 +398,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Default
     @Override
     public ItemStack getItem( int slot )
     {
-        return slot >= 0 && slot < INVENTORY_SIZE ? inventory.get( slot ) : ItemStack.EMPTY;
+        return slot >= 0 && slot < TOTAL_INVENTORY_SIZE ? inventory.get( slot ) : ItemStack.EMPTY;
     }
 
     @Nonnull
@@ -432,7 +433,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Default
     @Override
     public void setItem( int i, @Nonnull ItemStack stack )
     {
-        if ( i >= 0 && i < INVENTORY_SIZE )
+        if ( i >= 0 && i < TOTAL_INVENTORY_SIZE)
         {
             inventory.set( i, stack );
             if ( !InventoryUtil.areItemsEqual( stack, inventory.get( i ) ) )
@@ -446,7 +447,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Default
     public void clearContent()
     {
         boolean changed = false;
-        for( int i = 0; i < INVENTORY_SIZE; i++ )
+        for(int i = 0; i < TOTAL_INVENTORY_SIZE; i++ )
         {
             if( !inventory.get( i ).isEmpty() )
             {
@@ -464,7 +465,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Default
         super.setChanged();
         if( !inventoryChanged )
         {
-            for( int n = 0; n < getContainerSize(); n++ )
+            for( int n = 0; n < TOTAL_INVENTORY_SIZE; n++ )
             {
                 if( !ItemStack.matches( getItem( n ), previousInventory.get( n ) ) )
                 {

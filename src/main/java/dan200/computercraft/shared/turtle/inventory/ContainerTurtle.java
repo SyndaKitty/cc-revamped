@@ -82,7 +82,7 @@ public class ContainerTurtle extends ContainerComputerBase
     {
         this(
             id, x -> true, getComputer( player, data ), data.getFamily(),
-            player, new SimpleContainer( TileTurtle.INVENTORY_SIZE ), new SimpleContainerData( 1 )
+            player, new SimpleContainer( TileTurtle.TOTAL_INVENTORY_SIZE), new SimpleContainerData( 1 )
         );
     }
 

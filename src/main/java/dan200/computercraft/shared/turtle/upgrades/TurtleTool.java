@@ -75,18 +75,6 @@ public class TurtleTool extends AbstractTurtleUpgrade
     @Override
     public boolean isItemSuitable( @Nonnull ItemStack stack )
     {
-        CompoundTag tag = stack.getTag();
-        if( tag == null || tag.isEmpty() ) return true;
-
-        // Check we've not got anything vaguely interesting on the item. We allow other mods to add their
-        // own NBT, with the understanding such details will be lost to the mist of time.
-        if( stack.isDamaged() || stack.isEnchanted() || stack.hasCustomHoverName() ) return false;
-        if( tag.contains( "AttributeModifiers", TAG_LIST ) &&
-            !tag.getList( "AttributeModifiers", TAG_COMPOUND ).isEmpty() )
-        {
-            return false;
-        }
-
         return true;
     }
 
